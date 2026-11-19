@@ -541,6 +541,7 @@ var DAW_ROLL = {
     {"no": 38, "rank": "Gp Capt", "initials": "EA", "surname": "Ogiriki", "from": "2022-05-16", "to": "2022-12", "staff": 352},
     {"no": 39, "rank": "Gp Capt", "initials": "JO", "surname": "Mamman", "from": "2023-04-11", "to": null, "staff": 339},
     {"no": 40, "rank": "Gp Capt", "initials": "M", "surname": "Sani", "from": "2023-10-03", "to": "2025-12", "staff": 358},
-    {"no": 41, "rank": "Gp Capt", "initials": "TA", "surname": "Ezekiel", "from": "2025-02-24", "to": null, "current": true, "staff": 375}
+    {"no": 41, "rank": "Gp Capt", "initials": "TA", "surname": "Ezekiel", "from": "2025-02-24", "to": "2026-11-18", "staff": 375},
+    {"no": 42, "rank": "Gp Capt", "initials": "OJ", "surname": "Nwite", "from": "2026-11-19", "to": null, "current": true, "staff": 396}
   ]
 };
