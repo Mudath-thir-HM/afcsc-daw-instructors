@@ -263,7 +263,7 @@
     buildHonours();
     el.welcomeSub.innerHTML = '';
     el.welcomeSub.appendChild(make('b', null, String(R.seniorCourse.length + R.juniorCourse.length)));
-    el.welcomeSub.appendChild(document.createTextNode(' Chief Instructor appointments · '));
+    el.welcomeSub.appendChild(document.createTextNode(' Chief Instructors · '));
     el.welcomeSub.appendChild(make('b', null, String(DAW_S01.length)));
     el.welcomeSub.appendChild(document.createTextNode(' ' + t('s01Title') + ' · '));
     el.welcomeSub.appendChild(make('b', null, String(STAFF.length)));
