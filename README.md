@@ -33,7 +33,7 @@ where *Past Leaders* is a night-sky cockpit.
   Directing Staff, Search.
 - **The Directing Staff**: a slate sidebar to choose how to look, and the
   officers as index cards (rank insignia, initials and surname, specialty,
-  tour, and Serving / CI / RAF / GAF marks) that scroll up and down:
+  period of service, and Serving / CI / RAF / GAF marks) that scroll up and down:
   - **By year**: a bar for every year since 1976; tap or sweep a finger
     along it. The tall bar is how many were on the staff that year, the dark
     bar how many joined. Choose *Joined in* or *On the staff in*.
@@ -44,21 +44,21 @@ where *Past Leaders* is a night-sky cockpit.
   - **Serving now**: the officers on the staff today.
 - **Personnel file**: tap a card and the officer's file slides in from the
   right: roll number, service number, rank insignia, specialty, air force,
-  tour and duration; any Chief Instructor appointment they later held (tap to
+  Directing Staff service period and duration; any Chief Instructor appointment they later held (tap to
   go to it); and the others who joined in the same month. Previous/next (or
   swipe) step through the cards that were on screen.
 - **Chief Instructors**: a Senior Course / Junior Course switch at the top
   right, and the line of succession for the chosen course as a chain of
   numbered links across the screen, with the decades beneath. Below it, the
   selected Chief Instructor: insignia, place in the line, tenure and duration,
-  a link to their own tour on the Directing Staff, to their appointment on
+  a link to their Directing Staff record, to their appointment on
   the other course if they held both, and to their predecessor and
   successor. The line moves on by itself every 9 seconds (a bar fills along
   the current link); a touch holds it for 20 seconds. Timings are at the top
   of `script.js`.
 - **S01 A7**: the chronicle of the Department's S01 A7 (45 appointments) on
   the same line-of-succession screen as the Chief Instructors, without the
-  course switch. Each S01 A7 links to their tour on the Directing Staff and
+  course switch. Each S01 A7 links to their Directing Staff record and
   to any Chief Instructor appointment they held; the Directing Staff record
   and the Chief Instructor pages link back.
 - **Find an officer**: an on-screen keyboard (letters, numbers, `/` and `-`)
@@ -115,8 +115,8 @@ python3 tools/build_roll.py
 
 (needs `openpyxl`). The tool reads the dates in all the shapes they were
 typed, groups the specialties into branches, works out who is still serving
-(a tour typed with no end, such as "13 Feb 25 -", or "To date"), and links
-each Chief Instructor to their own tour as Directing Staff by surname and
+(a Directing Staff record with no end date, such as "13 Feb 25 -", or "To date"),
+and links each Chief Instructor to their Directing Staff record by surname and
 initials. It prints anything it could not read. Running it replaces any hand
 edits to `data/roll.js`, so put lasting corrections in the spreadsheet or in
 the tables at the top of the tool.

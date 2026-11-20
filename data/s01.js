@@ -9,7 +9,7 @@
    (no. 45, from June 2026, no end). Dates are ISO at the precision known
    ("2024-09").
 
-   Each S01 A7 is linked at run time to their tour on the Directing Staff
+   Each S01 A7 is linked at run time to their Directing Staff record
    roll and any Chief Instructor appointment, by surname and initials.
    ============================================================ */
 

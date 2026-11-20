@@ -7,8 +7,8 @@
 
    Dates are ISO at the precision known: "1978", "1991-02" or
    "1984-08-06". "to": null with "current": true marks an officer
-   still on the staff; "to": null on its own means the end of the
-   tour is not recorded yet.
+   still on the staff; "to": null on its own means the end date is not
+   recorded yet.
    service: "naf", "raf" (Royal Air Force) or "gaf" (Ghana Air Force).
    branch: one of the branch ids in data/content.js.
    chief: Chief Instructor appointments this officer later held.

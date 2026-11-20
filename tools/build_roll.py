@@ -41,7 +41,7 @@ FIXES = {
     ('Ato', '01-Nov-38-02-Jan-91'): ('1988-11-01', '1991-01-02'),        # "38" for 88; listed among the 1988 postings
     ('Udo', '15-May-75-Sep-98'): ('1995-05-15', '1998-09'),               # "75" for 95; listed among the 1995 postings
     ('Adediji', '23-41-02 - 23-Apr-04'): ('2002', '2004-04-23'),          # month unreadable; year kept
-    ('Durotoye', '02-May-06 - 01-May-06'): ('2006-05-02', '2008-05-01'),  # ends before it starts; two-year tour
+    ('Durotoye', '02-May-06 - 01-May-06'): ('2006-05-02', '2008-05-01'),  # ends before it starts; two-year appointment
     ('Dzokoto', '02-Jan-08 - 35-Jan-10'): ('2008-01-02', '2010-01'),      # "35 Jan"; month kept
     ('Tongha', '14 May 18 - 13 May 17'): ('2015-05-14', '2017-05-13'),    # "18" for 15; listed among the 2015 postings
     ('Watafua', '05 Oct 21- 04 Oct 22'): ('2020-10-05', '2022-10-04'),    # "21" for 20; listed among the Oct 2020 postings
@@ -283,8 +283,8 @@ def write(staff, senior, junior):
         '',
         '   Dates are ISO at the precision known: "1978", "1991-02" or',
         '   "1984-08-06". "to": null with "current": true marks an officer',
-        '   still on the staff; "to": null on its own means the end of the',
-        '   tour is not recorded yet.',
+        '   still on the staff; "to": null on its own means the end date is not',
+        '   recorded yet.',
         '   service: "naf", "raf" (Royal Air Force) or "gaf" (Ghana Air Force).',
         '   branch: one of the branch ids in data/content.js.',
         '   chief: Chief Instructor appointments this officer later held.',

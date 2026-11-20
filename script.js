@@ -263,7 +263,7 @@
     buildHonours();
     el.welcomeSub.innerHTML = '';
     el.welcomeSub.appendChild(make('b', null, String(R.seniorCourse.length + R.juniorCourse.length)));
-    el.welcomeSub.appendChild(document.createTextNode(' Chief Instructor tours · '));
+    el.welcomeSub.appendChild(document.createTextNode(' Chief Instructor appointments · '));
     el.welcomeSub.appendChild(make('b', null, String(DAW_S01.length)));
     el.welcomeSub.appendChild(document.createTextNode(' ' + t('s01Title') + ' · '));
     el.welcomeSub.appendChild(make('b', null, String(STAFF.length)));
@@ -567,7 +567,7 @@
       [t('serviceNo'), p.svcNo],
       [t('specialty'), p.specialty],
       [t('service'), p.service ? C.services[p.service].name : null],
-      [t('tour'), tenureLong(p), true],
+      [t('directingStaff'), tenureLong(p), true],
       [t('duration'), durationOf(p), true]
     ].forEach(function (f) {
       var d = make('div', f[2] ? 'is-wide' : null);
@@ -750,7 +750,7 @@
     resetIdleTimer();
   }
 
-  /* ---------------- S01 A7: link each to their Directing Staff tour ----------------
+  /* ---------------- S01 A7: link each to their Directing Staff record --------------
      By surname and initials, as tools/build_roll.py does for the Chief
      Instructors: the same initials, or one set beginning the other ("BOD"
      for "BO"), or the only officer of that surname with the same first initial. */

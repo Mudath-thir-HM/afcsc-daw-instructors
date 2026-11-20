@@ -71,7 +71,6 @@ var DAW_CONTENT = {
     rank: 'Rank on posting',
     serviceNo: 'Service No.',
     specialty: 'Specialty',
-    tour: 'Tour as Directing Staff',
     tenure: 'Tenure',
     duration: 'Duration',
     service: 'Air force',
