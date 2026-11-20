@@ -1,6 +1,6 @@
 # Our Instructors
 
-**Chronicle of the Directing Staff · Department of Air Warfare · Armed Forces Command and Staff College, Jaji**
+**Chronicle of the Directing Staff · Department of Air Warfare · Armed Forces Command and Staff College, Nigeria**
 
 Touch-screen kiosk honouring the instructors of the Department of Air
 Warfare: every officer posted to the Department as Directing Staff (DS)

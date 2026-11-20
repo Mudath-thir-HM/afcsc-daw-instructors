@@ -1,6 +1,6 @@
 /* ============================================================
    OUR INSTRUCTORS — kiosk text and settings
-   Department of Air Warfare, Armed Forces Command and Staff College, Jaji.
+   Department of Air Warfare, Armed Forces Command and Staff College, Nigeria.
 
    Every word the kiosk shows lives here, so it can be reworded without
    touching the app code. The rolls themselves are in data/roll.js.
@@ -10,8 +10,8 @@ var DAW_CONTENT = {
 
   ui: {
     appTitle: 'Our Instructors',
-    appKicker: 'Department of Air Warfare · AFCSC Jaji',
-    college: 'Armed Forces Command and Staff College, Jaji',
+    appKicker: 'Department of Air Warfare · AFCSC, Nigeria',
+    college: 'Armed Forces Command and Staff College, Nigeria',
     department: 'Department of Air Warfare',
     tagline: 'Honouring the officers who have taught air warfare to the College’s students.',
     touchToBegin: 'Touch to begin',

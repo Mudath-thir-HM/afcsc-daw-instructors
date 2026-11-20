@@ -1,5 +1,5 @@
 /* ============================================================
-   CHRONICLE OF S01 A7 — Department of Air Warfare, AFCSC Jaji.
+   CHRONICLE OF S01 A7 — Department of Air Warfare, AFCSC, Nigeria.
 
    Typed from source/Chronicle of S01 A7.pdf (the printed chronicle),
    in its order. Edit by hand: one officer per line.

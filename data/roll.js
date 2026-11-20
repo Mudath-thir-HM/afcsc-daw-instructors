@@ -1,6 +1,6 @@
 /* ============================================================
    ROLL OF THE DIRECTING STAFF AND CHIEF INSTRUCTORS
-   Department of Air Warfare, AFCSC Jaji.
+   Department of Air Warfare, AFCSC, Nigeria.
 
    Built from the spreadsheets in source/ by tools/build_roll.py.
    It can be corrected by hand: one officer per line.
