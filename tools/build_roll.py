@@ -6,7 +6,7 @@
 Reads the nominal roll of Directing Staff and the chronicles of Chief
 Instructors (Senior Course and Junior Course). The Directors sheet in the
 chronicles workbook is deliberately ignored: the Directors have their own
-kiosk (Our Leaders).
+kiosk (Past Leaders).
 
 The spreadsheets were typed by hand over many years, so the dates come in a
 dozen shapes ("09 Oct  76", "06-Aug-84", "Feb-91", "1978", "31-Ju1-94"...).

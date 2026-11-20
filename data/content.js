@@ -9,8 +9,9 @@
 var DAW_CONTENT = {
 
   ui: {
-    appTitle: 'Our Instructors',
-    appKicker: 'Department of Air Warfare · AFCSC, Nigeria',
+    appTitle: 'Faculty',
+    appKicker: 'SK Aneke Hall of Fame · Department of Air Warfare',
+    hallOfFame: 'SK Aneke Hall of Fame',
     college: 'Armed Forces Command and Staff College, Nigeria',
     department: 'Department of Air Warfare',
     tagline: 'Honouring the officers who have taught air warfare to the College’s students.',

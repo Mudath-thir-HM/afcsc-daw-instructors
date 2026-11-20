@@ -1,7 +1,7 @@
 @echo off
 setlocal
 
-rem Update Our Instructors from its configured GitHub branch.
+rem Update Faculty - SK Aneke Hall of Fame from its configured GitHub branch.
 cd /d "%~dp0"
 
 where git >nul 2>&1
@@ -17,7 +17,9 @@ if not exist ".git" (
 )
 
 echo Closing the kiosk if it is running...
+taskkill /fi "WINDOWTITLE eq Faculty*" /t /f >nul 2>&1
 taskkill /fi "WINDOWTITLE eq Our Instructors*" /t /f >nul 2>&1
+taskkill /fi "WINDOWTITLE eq SK Aneke Hall of Fame - Our Instructors*" /t /f >nul 2>&1
 
 for /f %%i in ('git rev-parse HEAD') do set "OLD=%%i"
 

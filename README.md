@@ -1,12 +1,12 @@
-# Our Instructors
+# Faculty
 
-**Chronicle of the Directing Staff · Department of Air Warfare · Armed Forces Command and Staff College, Nigeria**
+**SK Aneke Hall of Fame · Department of Air Warfare · Armed Forces Command and Staff College, Nigeria**
 
 Touch-screen kiosk honouring the instructors of the Department of Air
 Warfare: every officer posted to the Department as Directing Staff (DS)
 since 1976, and the Chief Instructors of the Senior Course and the Junior
 Course. The Directors of the Department are not shown here: they have their
-own kiosk, *Our Leaders* (`afcsc-leadership`), which this app is designed to
+own kiosk, *Past Leaders* (`afcsc-leadership`), which this app is designed to
 sit beside.
 
 It is a static, offline web app (no build step, no internet needed) designed
@@ -14,7 +14,7 @@ for a 1920×1080 landscape display and scaled to fit any screen. It shares the
 kiosk conventions of its siblings (launchers, idle reset, music) but has a
 look of its own: a daylight "staff room" of paper and ink, the Air Force slate
 blue and gold lace of the shoulder board, and the national green-white-green,
-where *Our Leaders* is a night-sky cockpit.
+where *Past Leaders* is a night-sky cockpit.
 
 ## Screens
 
