@@ -14,7 +14,7 @@ var DAW_CONTENT = {
     hallOfFame: 'SK Aneke Hall of Fame',
     college: 'Armed Forces Command and Staff College, Nigeria',
     department: 'Department of Air Warfare',
-    tagline: 'Honouring the officers who have taught air warfare to the College’s students.',
+    tagline: 'In honour of the officers who have taught participants in the Department of Air Warfare',
     touchToBegin: 'Touch to begin',
     honoursTitle: 'Directing Staff',
     honoursSub: 'Department of Air Warfare',
@@ -25,7 +25,7 @@ var DAW_CONTENT = {
     navStaff: 'Directing Staff',
     navSearch: 'Search',
 
-    homeTitle: 'The staff room',
+    homeTitle: 'The Faculty',
     homeLede: 'The officers who have led the Department’s two courses, its S01 A7, and all who have taught in it.',
     menuChiefs: 'Chief Instructors',
     menuChiefsSub: 'The line of officers who have led the teaching of each course. Tap a course to open it.',
