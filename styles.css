@@ -355,6 +355,7 @@ svg { width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width:
 .icard:active { border-color: var(--gold); transform: scale(0.985); }
 .icard-board { border-radius: 4px; overflow: hidden; background: var(--slate); }
 .icard-board img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 100%; }
+.icard-board img.is-portrait { object-position: 50% 18%; }
 .icard-text { display: flex; flex-direction: column; min-width: 0; }
 .icard-top { display: flex; justify-content: space-between; gap: 10px; font-family: var(--font-mono); font-size: 15px; color: var(--muted); }
 .icard-top b { font-weight: 500; color: var(--slate); }
@@ -407,6 +408,7 @@ svg { width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width:
 .ci-body.enter-next > :nth-child(2), .ci-body.enter-prev > :nth-child(2) { animation-delay: .05s; }
 .ci-board { display: grid; place-items: center; border-radius: 16px; background: var(--card); border: 1px solid var(--rule); box-shadow: var(--shadow); padding: 20px; }
 .ci-board img { height: 100%; max-height: 500px; width: auto; object-fit: contain; filter: drop-shadow(0 14px 20px rgba(22, 33, 58, 0.25)); }
+.ci-board img.is-portrait { height: 100%; width: 100%; max-height: none; object-fit: cover; object-position: top center; border-radius: 10px; filter: none; }
 .ci-main { display: flex; flex-direction: column; gap: 10px; min-width: 0; padding-top: 10px; }
 .ci-main .badge { align-self: flex-start; }
 .ci-ordinal { font-family: var(--font-mono); font-size: 20px; color: var(--gold-3); }
@@ -426,6 +428,8 @@ svg { width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width:
 .ref-mark { width: 52px; height: 52px; border-radius: 8px; display: grid; place-items: center; flex-shrink: 0; font-family: var(--font-mono); font-weight: 500; font-size: 17px; color: #fff; background: var(--slate); }
 .ref--gold { border-color: rgba(195, 154, 43, 0.6); background: #fff8e2; }
 .ref--gold .ref-mark { background: var(--gold); color: var(--ink); }
+.ref-mark { overflow: hidden; }
+.ref-photo { width: 100%; height: 100%; object-fit: cover; object-position: 50% 18%; }
 .ref-text { display: flex; flex-direction: column; gap: 2px; }
 .ref-label { font-family: var(--font-display); font-weight: 600; font-size: 14px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); }
 .ref-name { font-family: var(--font-serif); font-weight: 600; font-size: 23px; color: var(--ink); }
@@ -489,6 +493,7 @@ svg { width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width:
 .file-body { display: grid; grid-template-columns: 170px 1fr; gap: 44px; }
 .file-insignia { display: flex; flex-direction: column; align-items: center; gap: 14px; }
 .file-insignia img { width: 150px; height: 347px; object-fit: contain; filter: drop-shadow(0 12px 18px rgba(22, 33, 58, 0.25)); }
+.file-insignia img.is-portrait { width: 170px; height: 347px; border-radius: 10px; object-fit: cover; object-position: top center; filter: none; }
 .file-insignia span { font-family: var(--font-display); font-weight: 600; font-size: 17px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--slate); text-align: center; }
 .file-main { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
 .file-tags { display: flex; flex-wrap: wrap; gap: 8px; min-height: 32px; }

@@ -21,6 +21,60 @@
   // The lines of succession: the Chief Instructors of each course, and the S01 A7.
   var COURSES = { senior: R.seniorCourse, junior: R.juniorCourse, s01: DAW_S01 };
 
+  var CHIEF_PORTRAITS = {
+    'py-biakpara': 'biakpara',
+    'ya-katabiya': 'katabiya',
+    'at-muazu': 'muazu',
+    'pg-asemota': 'asemota',
+    'hi-hanidu': 'hanidu',
+    'ai-hanidu': 'hanidu',
+    'ii-nnamani': 'nnamani',
+    'ao-shogbanmu': 'shogbanmu',
+    'jo-babalola': 'babalola',
+    'uc-oche': 'oche',
+    'wo-pratt': 'pratt',
+    'bo-obadan': 'obadan',
+    'sa-eyoma': 'eyoma',
+    'hi-alhaji': 'alhaji',
+    'jo-mamman': 'mamman',
+    'ao-ogunmola': 'ogunmola',
+    'as-maigari': 'maigari',
+    'go-olanrewaju': 'olanrewaju',
+    'sbe-gerevbie': 'gerevbie',
+    'ot-ajomale': 'ajomale',
+    'm-lord-mallam': 'lord-mallam',
+    'ij-yahaya': 'yahaya',
+    'mc-nnaji': 'nnaji',
+    'ms-usman': 'usman',
+    'mo-olatunji': 'olatunji',
+    'ta-ezekiel': 'ezekiel',
+    'ia-abdulrahman': 'abdulrahman',
+    'ia-abdul-rahman': 'abdulrahman'
+  };
+
+  function chiefPortrait(p) {
+    if (!p) return null;
+    var surname = String(p.surname || '').toLowerCase()
+      .replace(/[’']/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+    var initials = String(p.initials || '').toLowerCase().replace(/[^a-z]/g, '');
+    var key = initials + '-' + surname;
+    var filename = CHIEF_PORTRAITS[key];
+    return filename ? 'assets/chiefs/' + filename + '.jpg' : null;
+  }
+
+  function staffPortrait(p) {
+    if (!p) return null;
+    var portrait = chiefPortrait(p);
+    if (portrait) return portrait;
+    var appointmentPortrait = null;
+    (p.chief || []).some(function (r) {
+      var appointment = COURSES[r.course] && COURSES[r.course][r.no - 1];
+      appointmentPortrait = chiefPortrait(appointment);
+      return !!appointmentPortrait;
+    });
+    return appointmentPortrait;
+  }
+
   var state = {
     screen: 'attract', course: 'senior', ciCourse: 'senior', ci: { senior: 0, junior: 0, s01: 0 },
     mode: 'year', year: null, yearScope: 'in', letter: null, branch: 'aircrew',
@@ -312,7 +366,8 @@
       var now = list.filter(isServing).pop() || list[list.length - 1];
       var box = make('span', 'fa-course');
       box.setAttribute('data-course', c);
-      box.appendChild(img(insignia(now.rank), rankFull(now.rank)));
+      var portrait = chiefPortrait(now);
+      box.appendChild(img(portrait || insignia(now.rank), portrait ? nameOf(now) : rankFull(now.rank)));
       var tx = make('span', 'fa-course-text');
       tx.appendChild(make('span', 'fa-course-name', courseLabel(c)));
       tx.appendChild(make('b', null, String(list.length)));
@@ -327,7 +382,8 @@
     // S01 A7: the serving (or latest) S01 A7 and the length of the chronicle
     var s01 = DAW_S01, s01Now = s01.filter(isServing).pop() || s01[s01.length - 1];
     var sb = make('span', 'fa-course');
-    sb.appendChild(img(insignia(s01Now.rank), rankFull(s01Now.rank)));
+    var s01Portrait = staffPortrait(s01Now);
+    sb.appendChild(img(s01Portrait || insignia(s01Now.rank), s01Portrait ? nameOf(s01Now) : rankFull(s01Now.rank)));
     var stx = make('span', 'fa-course-text');
     stx.appendChild(make('b', null, String(s01.length)));
     stx.appendChild(make('span', null, 'Appointments'));
@@ -347,7 +403,13 @@
     var card = make('button', 'icard' + (serving ? ' icard--serving' : ''));
     card.setAttribute('aria-label', rankFull(p.rank) + ' ' + nameOf(p));
     var board = make('span', 'icard-board');
-    if (insignia(p.rank)) board.appendChild(img(insignia(p.rank), rankFull(p.rank)));
+    var portrait = staffPortrait(p);
+    var image = portrait || insignia(p.rank);
+    if (image) {
+      var thumb = img(image, portrait ? nameOf(p) : rankFull(p.rank));
+      if (portrait) thumb.classList.add('is-portrait');
+      board.appendChild(thumb);
+    }
     card.appendChild(board);
     var tx = make('span', 'icard-text');
     var top = make('span', 'icard-top');
@@ -549,8 +611,10 @@
     stopCi();
 
     el.recordRef.textContent = 'DS ' + pad2(p.no) + ' / ' + STAFF.length + (p.svcNo ? '   ·   ' + p.svcNo : '');
-    el.recordInsignia.src = insignia(p.rank) || '';
-    el.recordInsignia.alt = rankFull(p.rank);
+    var portrait = staffPortrait(p);
+    el.recordInsignia.src = portrait || insignia(p.rank) || '';
+    el.recordInsignia.alt = portrait ? nameOf(p) : rankFull(p.rank);
+    el.recordInsignia.classList.toggle('is-portrait', !!portrait);
     el.recordRankFull.textContent = rankFull(p.rank);
 
     el.recordTags.innerHTML = '';
@@ -660,8 +724,10 @@
     var list = chiefList(), p = list[i];
     state.ci[state.course] = i;
 
-    el.ciInsignia.src = insignia(p.rank) || '';
-    el.ciInsignia.alt = rankFull(p.rank);
+    var portrait = chiefPortrait(p);
+    el.ciInsignia.src = portrait || insignia(p.rank) || '';
+    el.ciInsignia.alt = portrait ? nameOf(p) : rankFull(p.rank);
+    el.ciInsignia.classList.toggle('is-portrait', !!portrait);
     el.ciOrdinal.textContent = ordinal(p.no) + ' ' + lineLabel(state.course);
     var serving = isServing(p);
     el.ciTag.textContent = serving ? t('serving') : '';
@@ -842,6 +908,15 @@
       shortName(p) + (svcOf(p) ? '  ·  ' + svcOf(p) : ''), true,
       function () { showChief(course, p.no - 1); });
     b.classList.add('result-ci');
+    var portrait = chiefPortrait(p);
+    if (portrait) {
+      b.classList.add('has-portrait');
+      var mark = b.querySelector('.ref-mark');
+      mark.innerHTML = '';
+      var photo = img(portrait, nameOf(p));
+      photo.className = 'ref-photo';
+      mark.appendChild(photo);
+    }
     return b;
   }
 
