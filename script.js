@@ -367,7 +367,9 @@
       var box = make('span', 'fa-course');
       box.setAttribute('data-course', c);
       var portrait = chiefPortrait(now);
-      box.appendChild(img(portrait || insignia(now.rank), portrait ? nameOf(now) : rankFull(now.rank)));
+      var courseImage = img(portrait || insignia(now.rank), portrait ? nameOf(now) : rankFull(now.rank));
+      if (portrait) courseImage.classList.add('is-portrait');
+      box.appendChild(courseImage);
       var tx = make('span', 'fa-course-text');
       tx.appendChild(make('span', 'fa-course-name', courseLabel(c)));
       tx.appendChild(make('b', null, String(list.length)));
@@ -383,7 +385,9 @@
     var s01 = DAW_S01, s01Now = s01.filter(isServing).pop() || s01[s01.length - 1];
     var sb = make('span', 'fa-course');
     var s01Portrait = staffPortrait(s01Now);
-    sb.appendChild(img(s01Portrait || insignia(s01Now.rank), s01Portrait ? nameOf(s01Now) : rankFull(s01Now.rank)));
+    var s01Image = img(s01Portrait || insignia(s01Now.rank), s01Portrait ? nameOf(s01Now) : rankFull(s01Now.rank));
+    if (s01Portrait) s01Image.classList.add('is-portrait');
+    sb.appendChild(s01Image);
     var stx = make('span', 'fa-course-text');
     stx.appendChild(make('b', null, String(s01.length)));
     stx.appendChild(make('span', null, 'Appointments'));

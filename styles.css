@@ -231,6 +231,7 @@ svg { width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width:
 /* course folders: the serving Chief Instructor's insignia and the line count */
 .fa-course { position: absolute; top: 0; right: 0; bottom: 0; left: 0; display: flex; align-items: center; gap: 26px; padding: 0 30px; }
 .fa-course img { width: 100px; height: 232px; object-fit: contain; flex-shrink: 0; filter: drop-shadow(0 8px 14px rgba(0, 0, 0, 0.35)); }
+.fa-course img.is-portrait { width: 232px; height: 232px; aspect-ratio: 1; border-radius: 10px; object-fit: cover; object-position: 50% 18%; filter: none; }
 .fa-course-text { display: flex; flex-direction: column; gap: 8px; color: var(--slate-ink); min-width: 0; }
 .fa-course-text b { font-family: var(--font-display); font-weight: 700; font-size: 96px; line-height: 0.85; color: var(--gold-2); }
 .fa-course-text span { font-family: var(--font-display); font-weight: 600; font-size: 16px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(233, 237, 246, 0.75); }
@@ -255,6 +256,7 @@ svg { width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width:
 .folders .folder-go { right: 22px; bottom: 26px; width: 58px; height: 58px; }
 .folder-art--split .fa-course { padding: 0 14px; gap: 12px; }
 .folder-art--split .fa-course img { width: 64px; height: 148px; }
+.folder-art--split .fa-course img.is-portrait { width: 148px; height: 148px; aspect-ratio: 1; }
 .folder-art--split .fa-course-text b { font-size: 64px; }
 .folder-art--split .fa-course-text em { font-size: 19px; }
 .folder-art--split .fa-course-text .fa-course-name { font-size: 19px; }
@@ -354,6 +356,7 @@ svg { width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width:
 }
 .icard:active { border-color: var(--gold); transform: scale(0.985); }
 .icard-board { border-radius: 4px; overflow: hidden; background: var(--slate); }
+.icard-board { width: 58px; aspect-ratio: 1; align-self: start; }
 .icard-board img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 100%; }
 .icard-board img.is-portrait { object-position: 50% 18%; }
 .icard-text { display: flex; flex-direction: column; min-width: 0; }
@@ -406,9 +409,9 @@ svg { width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width:
 .ci-body.enter-next > * { animation: fromRight .5s var(--ease) both; }
 .ci-body.enter-prev > * { animation: fromLeft .5s var(--ease) both; }
 .ci-body.enter-next > :nth-child(2), .ci-body.enter-prev > :nth-child(2) { animation-delay: .05s; }
-.ci-board { display: grid; place-items: center; border-radius: 16px; background: var(--card); border: 1px solid var(--rule); box-shadow: var(--shadow); padding: 20px; }
+.ci-board { width: 300px; height: 300px; aspect-ratio: 1; align-self: start; display: grid; place-items: center; border-radius: 16px; background: var(--card); border: 1px solid var(--rule); box-shadow: var(--shadow); padding: 20px; }
 .ci-board img { height: 100%; max-height: 500px; width: auto; object-fit: contain; filter: drop-shadow(0 14px 20px rgba(22, 33, 58, 0.25)); }
-.ci-board img.is-portrait { height: 100%; width: 100%; max-height: none; object-fit: cover; object-position: top center; border-radius: 10px; filter: none; }
+.ci-board img.is-portrait { width: 260px; height: 260px; max-height: none; aspect-ratio: 1; object-fit: cover; object-position: 50% 18%; border-radius: 10px; filter: none; }
 .ci-main { display: flex; flex-direction: column; gap: 10px; min-width: 0; padding-top: 10px; }
 .ci-main .badge { align-self: flex-start; }
 .ci-ordinal { font-family: var(--font-mono); font-size: 20px; color: var(--gold-3); }
@@ -429,7 +432,7 @@ svg { width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width:
 .ref--gold { border-color: rgba(195, 154, 43, 0.6); background: #fff8e2; }
 .ref--gold .ref-mark { background: var(--gold); color: var(--ink); }
 .ref-mark { overflow: hidden; }
-.ref-photo { width: 100%; height: 100%; object-fit: cover; object-position: 50% 18%; }
+.ref-photo { width: 100%; height: 100%; aspect-ratio: 1; object-fit: cover; object-position: 50% 18%; }
 .ref-text { display: flex; flex-direction: column; gap: 2px; }
 .ref-label { font-family: var(--font-display); font-weight: 600; font-size: 14px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); }
 .ref-name { font-family: var(--font-serif); font-weight: 600; font-size: 23px; color: var(--ink); }
@@ -493,7 +496,7 @@ svg { width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width:
 .file-body { display: grid; grid-template-columns: 170px 1fr; gap: 44px; }
 .file-insignia { display: flex; flex-direction: column; align-items: center; gap: 14px; }
 .file-insignia img { width: 150px; height: 347px; object-fit: contain; filter: drop-shadow(0 12px 18px rgba(22, 33, 58, 0.25)); }
-.file-insignia img.is-portrait { width: 170px; height: 347px; border-radius: 10px; object-fit: cover; object-position: top center; filter: none; }
+.file-insignia img.is-portrait { width: 170px; height: 170px; aspect-ratio: 1; border-radius: 10px; object-fit: cover; object-position: 50% 18%; filter: none; }
 .file-insignia span { font-family: var(--font-display); font-weight: 600; font-size: 17px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--slate); text-align: center; }
 .file-main { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
 .file-tags { display: flex; flex-wrap: wrap; gap: 8px; min-height: 32px; }
