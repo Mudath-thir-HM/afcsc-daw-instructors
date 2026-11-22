@@ -49,7 +49,8 @@
     'mo-olatunji': 'olatunji',
     'ta-ezekiel': 'ezekiel',
     'ia-abdulrahman': 'abdulrahman',
-    'ia-abdul-rahman': 'abdulrahman'
+    'ia-abdul-rahman': 'abdulrahman',
+    'fj-ibrahim': 'fj-ibrahim'
   };
 
   var STAFF_PORTRAITS = {
