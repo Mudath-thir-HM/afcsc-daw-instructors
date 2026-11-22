@@ -52,6 +52,27 @@
     'ia-abdul-rahman': 'abdulrahman'
   };
 
+  var STAFF_PORTRAITS = {
+    390: 'atebe',
+    395: 'awolola',
+    399: 'akiti',
+    400: 'tahir',
+    403: 'ahmed',
+    405: 'efanga',
+    406: 'yerima',
+    408: 'adejumo',
+    414: 'oa-ajayi',
+    416: 'amolegbe',
+    417: 'ohanbunwa',
+    419: 'sb-madaki',
+    421: 'kotti',
+    422: 'musa',
+    424: 'k-usman',
+    425: 'akuamoah-boateng',
+    426: 'egwurube',
+    429: 'farouk'
+  };
+
   function chiefPortrait(p) {
     if (!p) return null;
     var surname = String(p.surname || '').toLowerCase()
@@ -64,6 +85,7 @@
 
   function staffPortrait(p) {
     if (!p) return null;
+    if (STAFF_PORTRAITS[p.no]) return 'assets/chiefs/' + STAFF_PORTRAITS[p.no] + '.jpg';
     var portrait = chiefPortrait(p);
     if (portrait) return portrait;
     var appointmentPortrait = null;
