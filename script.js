@@ -294,10 +294,11 @@
     el.topbar.classList.toggle('hidden', screenId === 'attract');
     var section = screenId === 'chiefs' && state.course === 's01' ? 's01' : screenId;
     el.topbarNav.querySelectorAll('[data-nav]').forEach(function (b) { b.classList.toggle('active', b.getAttribute('data-nav') === section); });
-    if (screenId === 'attract') startHonours();
+    if (screenId === 'attract') { startHonours(); startFlights(); } else { stopWelcomeFlights(); }
     if (screenId === 'staff') el.cards.scrollTop = 0;
     if (screenId === 'chiefs') enterChiefs();
     if (screenId === 'search') renderResults();
+    positionTabJet(section);
     resetIdleTimer();
   }
 
@@ -374,6 +375,7 @@
     counts.forEach(function (n, i) {
       var b = make('i', YEARS[i] === LAST_YEAR ? 'is-now' : '');
       b.style.height = (n / max * 100) + '%';
+      b.style.animationDelay = Math.min(i * 0.012, 0.5).toFixed(3) + 's';
       bars.appendChild(b);
     });
     el.homeStaffArt.appendChild(bars);
@@ -401,7 +403,7 @@
       tx.appendChild(make('em', null, shortName(now)));
       tx.appendChild(make('small', null, (isServing(now) ? 'Serving · ' : 'Latest · ') + tenureYears(now)));
       box.appendChild(tx);
-      box.addEventListener('click', function (e) { e.stopPropagation(); showScreen(c); });
+      box.addEventListener('click', function (e) { e.stopPropagation(); navigate(c); });
       el.homeChiefsArt.appendChild(box);
     });
     el.homeChiefsMeta.textContent = total + ' appointments · two courses';
@@ -494,6 +496,7 @@
       el.cards.appendChild(card);
     });
     el.cards.scrollTop = 0;
+    revealNodes(el.cards, '.icard');
   }
 
   function setMode(mode) {
@@ -517,6 +520,7 @@
     el.ribbonCols = data.map(function (d) {
       var tick = d.y % 5 === 0;
       var col = make('div', 'ryear' + (tick ? ' is-tick' : ''));
+      col.style.animationDelay = Math.min(d.y - YEARS[0], 40) * 0.008 + 's';
       var bars = make('div', 'ryear-bars');
       var on = make('span', 'ryear-on'); on.style.height = (d.on / maxOn * 100) + '%';
       var inn = make('span', 'ryear-in'); inn.style.height = (d.inn / maxOn * 100) + '%';
@@ -727,6 +731,7 @@
     el.links = list.map(function (p, i) {
       var b = make('button', 'link' + (isServing(p) ? ' is-serving' : ''), String(p.no));
       b.setAttribute('aria-label', ordinal(p.no) + ' ' + roleOf(state.course) + ': ' + shortName(p));
+      b.style.animationDelay = Math.min(i * 0.018, 0.45).toFixed(3) + 's';
       b.appendChild(make('span', 'link-progress'));
       b.addEventListener('click', function () { showChief(state.course, i); });
       el.chain.appendChild(b);
@@ -746,6 +751,8 @@
       s.style.left = ((i + 0.5) / list.length * 100) + '%';
       el.chainAxis.appendChild(s);
     });
+    motion.chainJet = jetSvg('chain-jet', true);
+    el.chain.appendChild(motion.chainJet);
   }
 
   function renderChief(i, direction, auto) {
@@ -797,6 +804,7 @@
       bar.classList.remove('run');
       if (k === i && auto) { void bar.offsetWidth; bar.style.animationDuration = CI_INTERVAL + 'ms'; bar.classList.add('run'); }
     });
+    positionChainJet(i);
     restartAnimation(el.ciBody, direction ? (direction < 0 ? 'enter-prev' : 'enter-next') : null);
   }
 
@@ -837,7 +845,9 @@
     closeRecord(true);
     if (state.screen !== 'chiefs' || state.course !== course) {
       state.ci[course] = i;
-      showScreen(course);
+      navigate(course, function () { renderChief(i, direction || 1, false); holdCi(); });
+      resetIdleTimer();
+      return;
     }
     renderChief(i, direction || (i >= state.ci[course] ? 1 : -1), false);
     holdCi();
@@ -986,8 +996,9 @@
       el.results.appendChild(make('h3', 'results-group', t('directingStaff') + ' · ' + ds.length));
       var grid = make('div', 'results-ds');
       var shown = ds.slice(0, MAX_STAFF_RESULTS);
-      shown.forEach(function (p) {
+      shown.forEach(function (p, k) {
         var card = staffCard(p);
+        card.style.animationDelay = Math.min(k * 0.02, 0.3).toFixed(2) + 's';
         card.addEventListener('click', function () { openRecord(p.no, shown); });
         grid.appendChild(card);
       });
@@ -995,6 +1006,7 @@
       if (ds.length > shown.length) el.results.appendChild(make('p', 'results-note', 'And ' + (ds.length - shown.length) + ' more: keep typing to narrow the search.'));
     }
     el.results.scrollTop = 0;
+    revealNodes(el.results, '.icard');
   }
 
   /* ---------------- swipe ---------------- */
@@ -1016,8 +1028,413 @@
     if (state.screen === 'attract') return;
     idleTimer = setTimeout(function () {
       el.idleOverlay.classList.remove('hidden');
-      setTimeout(function () { el.idleOverlay.classList.add('hidden'); showScreen('attract'); }, 1600);
+      setTimeout(function () {
+        navigate('attract', function () { el.idleOverlay.classList.add('hidden'); });
+      }, 2200);
     }, IDLE_TIMEOUT_MS);
+  }
+
+  /* ============================================================
+     MOTION — the flight-curtain language of the AFCSC exhibition
+     Everything below is decorative. The layers are created here at
+     runtime, so the markup, copy and rolls stay exactly as they are.
+     ============================================================ */
+
+  var MOTION_COVER_MS = 580;
+  var MOTION_REVEAL_MS = 780;
+  var JET_SHAPES = [
+    'M2 30 C10 26.5 28 25.2 46 25 L104 26 L116 21.5 L119 21.5 L115 29 L115 31 L119 38.5 L116 38.5 L104 34 L46 35 C28 34.8 10 33.5 2 30 Z',
+    'M42 26 L72 3 L81 3 L68 26 Z',
+    'M42 34 L72 57 L81 57 L68 34 Z',
+    'M96 26.3 L107 13 L112.5 13 L107.5 27 Z',
+    'M96 33.7 L107 47 L112.5 47 L107.5 33 Z'
+  ];
+  // The two welcome flypasts: an intro pass in front of the composition, a distant one behind it.
+  var FLIGHT_INTRO = 'M 2250 860 C 1700 820 1350 560 980 430 S 260 330 -480 520';
+  var FLIGHT_AMBIENT = 'M -400 210 C 300 120 900 250 1400 150 S 2000 120 2350 60';
+  var DECOR_PATHS = [
+    'M -60 940 C 420 800 760 1010 1160 890 S 1720 690 1990 760',
+    'M -60 300 C 260 220 520 360 860 250',
+    'M 1100 1010 C 1350 900 1600 980 1990 860'
+  ];
+
+  var motion = {
+    reduced: false, curtain: null, curtainNum: null, curtainTitle: null, busy: false,
+    screens: null, tabJet: null, chainJet: null, tabX: null, chainX: null, observer: null,
+    intro: null, ambient: null
+  };
+  try { motion.reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) { motion.reduced = false; }
+
+  function jetSvg(cls, faceRight) {
+    var NS = 'http://www.w3.org/2000/svg';
+    var svg = document.createElementNS(NS, 'svg');
+    svg.setAttribute('viewBox', '0 0 120 60');
+    svg.setAttribute('aria-hidden', 'true');
+    if (cls) svg.setAttribute('class', cls);
+    // The silhouette is drawn nose-left; the group flips it for markers that face the reading direction.
+    var g = document.createElementNS(NS, 'g');
+    if (faceRight) g.setAttribute('transform', 'translate(120 0) scale(-1 1)');
+    JET_SHAPES.forEach(function (d) {
+      var p = document.createElementNS(NS, 'path');
+      p.setAttribute('d', d);
+      g.appendChild(p);
+    });
+    svg.appendChild(g);
+    return svg;
+  }
+
+  /* ---------------- the flight curtain ---------------- */
+  function buildCurtain() {
+    var c = make('div', 'curtain');
+    c.setAttribute('aria-hidden', 'true');
+    var lead = make('div', 'curtain-panel curtain-panel--lead');
+    var main = make('div', 'curtain-panel curtain-panel--main');
+    main.appendChild(make('span', 'curtain-edge'));
+    main.appendChild(jetSvg('curtain-jet'));
+    main.appendChild(make('span', 'curtain-contrail curtain-contrail--a'));
+    main.appendChild(make('span', 'curtain-contrail curtain-contrail--b'));
+    var label = make('div', 'curtain-label');
+    motion.curtainNum = make('span', 'curtain-num', '01');
+    motion.curtainTitle = make('span', 'curtain-title', '');
+    label.appendChild(motion.curtainNum);
+    label.appendChild(motion.curtainTitle);
+    main.appendChild(label);
+    c.appendChild(lead);
+    c.appendChild(main);
+    el.stage.appendChild(c);
+    motion.curtain = c;
+  }
+
+  function targetScreen(id) { return (id === 'senior' || id === 'junior') ? 'chiefs' : id; }
+
+  // The gallery number and title flown in on the curtain, in the exhibition's order.
+  function curtainMeta(id) {
+    if (id === 'senior' || id === 'junior') return ['03', courseLabel(id)];
+    if (id === 's01') return ['04', t('s01Title')];
+    if (id === 'chiefs') return ['03', state.ciCourse === 's01' ? t('s01Title') : t('navChiefs')];
+    if (id === 'staff') return ['02', t('navStaff')];
+    if (id === 'search') return ['05', t('navSearch')];
+    if (id === 'home') return ['01', t('navHome')];
+    return ['00', t('appTitle')];
+  }
+
+  function curtainPanel(node, frames, opts) {
+    if (!node || !node.animate) return null;
+    try { return node.animate(frames, opts); } catch (e) { return null; }
+  }
+
+  // Navigation with the curtain. `then` runs once the next screen is in place.
+  function navigate(id, then) {
+    if (motion.busy) return;
+    var c = motion.curtain;
+    var ready = c && c.querySelector('.curtain-panel') && c.querySelector('.curtain-panel').animate;
+    if (motion.reduced || !ready || targetScreen(id) === state.screen) {
+      showScreen(id);
+      if (then) then();
+      return;
+    }
+    var meta = curtainMeta(id);
+    motion.busy = true;
+    motion.curtainNum.textContent = meta[0];
+    motion.curtainTitle.textContent = meta[1];
+
+    var lead = c.querySelector('.curtain-panel--lead');
+    var main = c.querySelector('.curtain-panel--main');
+    var label = c.querySelector('.curtain-label');
+    var curve = 'cubic-bezier(0.76, 0, 0.24, 1)';
+    c.classList.add('is-active');
+
+    var coverLead = curtainPanel(lead, [{ transform: 'translateX(100%)' }, { transform: 'translateX(0)' }],
+      { duration: 460, easing: curve, fill: 'both' });
+    var coverMain = curtainPanel(main, [{ transform: 'translateX(100%)' }, { transform: 'translateX(0)' }],
+      { duration: 520, delay: 50, easing: curve, fill: 'both' });
+    var labelIn = curtainPanel(label, [{ opacity: 0, transform: 'translateY(16px)' }, { opacity: 1, transform: 'translateY(0)' }],
+      { duration: 300, delay: 280, easing: 'ease-out', fill: 'both' });
+
+    setTimeout(function () {
+      showScreen(id);
+      // Hold the new screen's entrance until the curtain is on its way out.
+      if (motion.screens) motion.screens.classList.add('motion-hold');
+
+      var revealLead = curtainPanel(lead, [{ transform: 'translateX(0)' }, { transform: 'translateX(-101%)' }],
+        { duration: 600, delay: 100, easing: curve, fill: 'both' });
+      var revealMain = curtainPanel(main, [{ transform: 'translateX(0)' }, { transform: 'translateX(-101%)' }],
+        { duration: 620, easing: curve, fill: 'both' });
+      var labelOut = curtainPanel(label, [{ opacity: 1 }, { opacity: 0 }],
+        { duration: 240, easing: 'ease-in', fill: 'both' });
+      if (coverLead) coverLead.cancel();
+      if (coverMain) coverMain.cancel();
+      if (labelIn) labelIn.cancel();
+      if (then) then();
+
+      var release = function () { if (motion.screens) motion.screens.classList.remove('motion-hold'); };
+      if (window.requestAnimationFrame) requestAnimationFrame(function () { requestAnimationFrame(release); });
+      else setTimeout(release, 32);
+
+      setTimeout(function () {
+        c.classList.remove('is-active');
+        [revealLead, revealMain, labelOut].forEach(function (a) { if (a) a.cancel(); });
+        motion.busy = false;
+      }, MOTION_REVEAL_MS);
+    }, MOTION_COVER_MS);
+  }
+
+  // The silhouette is drawn nose-left; this turns the whole aircraft to face its direction of travel.
+  function faceJet(svg, faceRight) {
+    var g = svg && svg.querySelector('g');
+    if (!g) return;
+    if (faceRight) g.setAttribute('transform', 'translate(120 0) scale(-1 1)');
+    else g.removeAttribute('transform');
+  }
+
+  /* ---------------- the jet that taxis along the top bar ---------------- */
+  function buildTabJet() {
+    motion.tabJet = jetSvg('tab-jet', true);
+    el.topbarNav.appendChild(motion.tabJet);
+  }
+  function positionTabJet(section) {
+    var jet = motion.tabJet;
+    if (!jet) return;
+    var tab = el.topbarNav.querySelector('[data-nav="' + section + '"]');
+    if (!tab || !tab.offsetWidth) { jet.classList.remove('is-on'); return; }
+    var x = Math.round(tab.offsetLeft + tab.offsetWidth / 2 - 17);
+    faceJet(jet, motion.tabX === null ? true : x >= motion.tabX);
+    motion.tabX = x;
+    jet.style.transform = 'translateX(' + x + 'px)';
+    jet.classList.add('is-on');
+  }
+
+  /* ---------------- the jet that glides along the line of succession ---------------- */
+  function positionChainJet(i) {
+    var jet = motion.chainJet;
+    if (!jet || !el.links || !el.links[i]) return;
+    var link = el.links[i];
+    var x = Math.round(link.offsetLeft + link.offsetWidth / 2 - 20);
+    faceJet(jet, motion.chainX === null ? true : x >= motion.chainX);
+    motion.chainX = x;
+    jet.style.transform = 'translateX(' + x + 'px)';
+    jet.classList.add('is-on');
+  }
+
+  /* ---------------- reveals as lists scroll into view ---------------- */
+  function revealNodes(scroller, selector) {
+    if (!scroller) return;
+    var nodes = scroller.querySelectorAll(selector);
+    if (!nodes.length) return;
+    function markAll() { Array.prototype.forEach.call(nodes, function (n) { n.classList.add('is-in'); }); }
+    if (motion.reduced || !('IntersectionObserver' in window) || !scroller.clientHeight) { markAll(); return; }
+    if (motion.observer) motion.observer.disconnect();
+    motion.observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('is-in');
+        motion.observer.unobserve(entry.target);
+      });
+    }, { root: scroller, rootMargin: '0px 0px -4% 0px', threshold: 0.04 });
+    Array.prototype.forEach.call(nodes, function (n) { motion.observer.observe(n); });
+  }
+
+  /* ---------------- welcome: radar, flight paths, flypasts, crest glint ---------------- */
+  function radarMarkup() {
+    var rings = [170, 270, 390, 530].map(function (r, i) {
+      return '<circle class="radar-ring" cx="0" cy="0" r="' + r + '" pathLength="1" style="animation-delay:' +
+        (0.15 + i * 0.16).toFixed(2) + 's;stroke-opacity:' + (0.2 - i * 0.03).toFixed(3) + '"></circle>';
+    }).join('');
+    var ticks = '';
+    for (var d = 0; d < 360; d += 5) {
+      var outer = d % 30 === 0 ? 575 : 562;
+      ticks += '<line x1="0" y1="-552" x2="0" y2="-' + outer + '" transform="rotate(' + d + ')" stroke-opacity="' +
+        (d % 30 === 0 ? 0.34 : 0.16) + '"' + (d % 90 === 0 ? ' stroke="var(--gold)"' : '') + '></line>';
+    }
+    return '<svg viewBox="-600 -600 1200 1200" aria-hidden="true">' + rings +
+      '<g class="radar-ticks">' + ticks + '</g>' +
+      '<line class="radar-axis" x1="-600" y1="0" x2="600" y2="0"></line>' +
+      '<line class="radar-axis" x1="0" y1="-600" x2="0" y2="600"></line>' +
+      '</svg>';
+  }
+
+  // Dotted lines are revealed through a drawn mask, so the dot pattern survives the animation.
+  function decorMarkup() {
+    var defs = '', lines = '';
+    DECOR_PATHS.forEach(function (d, i) {
+      var id = 'decor-reveal-' + i;
+      defs += '<mask id="' + id + '" maskUnits="userSpaceOnUse" x="0" y="0" width="1920" height="1080">' +
+        '<path class="decor-reveal" pathLength="1" d="' + d + '" style="animation-delay:' + (0.5 + i * 0.3).toFixed(2) + 's"></path></mask>';
+      lines += '<path class="decor-line" d="' + d + '" mask="url(#' + id + ')" stroke="' +
+        (i === 0 ? 'var(--gold-3)' : 'var(--slate)') + '"></path>';
+    });
+    return '<svg viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs>' + defs + '</defs>' + lines + '</svg>';
+  }
+
+  var flightSeq = 0;
+  function buildFlight(cls) {
+    var NS = 'http://www.w3.org/2000/svg';
+    var svg = document.createElementNS(NS, 'svg');
+    svg.setAttribute('viewBox', '0 0 1920 1080');
+    svg.setAttribute('preserveAspectRatio', 'xMidYMid slice');
+    svg.setAttribute('class', 'flight-layer ' + cls);
+    svg.setAttribute('aria-hidden', 'true');
+    var id = 'flight-trail-' + (++flightSeq);
+    var defs = document.createElementNS(NS, 'defs');
+    var mask = document.createElementNS(NS, 'mask');
+    mask.setAttribute('id', id);
+    mask.setAttribute('maskUnits', 'userSpaceOnUse');
+    mask.setAttribute('x', '0');
+    mask.setAttribute('y', '0');
+    mask.setAttribute('width', '1920');
+    mask.setAttribute('height', '1080');
+    var maskPath = document.createElementNS(NS, 'path');
+    maskPath.setAttribute('fill', 'none');
+    maskPath.setAttribute('stroke', '#fff');
+    maskPath.setAttribute('stroke-width', '14');
+    mask.appendChild(maskPath);
+    defs.appendChild(mask);
+    svg.appendChild(defs);
+
+    var guide = document.createElementNS(NS, 'path');
+    guide.setAttribute('fill', 'none');
+    guide.setAttribute('stroke', 'none');
+    svg.appendChild(guide);
+
+    var trail = document.createElementNS(NS, 'path');
+    trail.setAttribute('class', 'flight-trail');
+    trail.setAttribute('fill', 'none');
+    trail.setAttribute('mask', 'url(#' + id + ')');
+    svg.appendChild(trail);
+
+    var plane = document.createElementNS(NS, 'g');
+    plane.setAttribute('class', 'flight-jet');
+    JET_SHAPES.forEach(function (d) {
+      var p = document.createElementNS(NS, 'path');
+      p.setAttribute('d', d);
+      plane.appendChild(p);
+    });
+    svg.appendChild(plane);
+
+    return { svg: svg, guide: guide, maskPath: maskPath, trail: trail, plane: plane, raf: null, timer: null, stopped: true };
+  }
+
+  function flyPass(f, opts) {
+    if (!f || f.stopped) return;
+    f.guide.setAttribute('d', opts.path);
+    f.maskPath.setAttribute('d', opts.path);
+    f.trail.setAttribute('d', opts.path);
+    var L = f.guide.getTotalLength();
+    var ms = opts.duration * 1000;
+    var scale = opts.scale || [1.2, 1.6];
+    var started = null;
+    f.maskPath.style.strokeDasharray = String(L);
+    f.maskPath.style.strokeDashoffset = String(L);
+    f.plane.style.opacity = '1';
+    f.trail.style.opacity = '0.85';
+
+    function frame(now) {
+      if (f.stopped) return;
+      if (started === null) started = now;
+      var k = Math.min(1, (now - started) / ms);
+      var eased = k * k * (3 - 2 * k);
+      var at = eased * L;
+      var a = f.guide.getPointAtLength(at);
+      var b = f.guide.getPointAtLength(Math.min(L, at + 2));
+      var c = at + 2 > L ? f.guide.getPointAtLength(Math.max(0, at - 2)) : a;
+      var ang = Math.atan2(b.y - c.y, b.x - c.x) * 180 / Math.PI;
+      var s = scale[0] + (scale[1] - scale[0]) * Math.sin(Math.PI * k);
+      f.plane.setAttribute('transform', 'translate(' + a.x + ' ' + a.y + ') rotate(' + (ang + 180) + ') scale(' + s + ')');
+      f.maskPath.style.strokeDashoffset = String(L * (1 - eased));
+      if (k < 1) { f.raf = requestAnimationFrame(frame); return; }
+      f.raf = null;
+      f.plane.style.opacity = '0';
+      f.trail.style.opacity = '0';
+      if (opts.repeat) {
+        f.timer = setTimeout(function () { flyPass(f, opts); }, opts.repeat * 1000);
+      }
+    }
+    f.raf = requestAnimationFrame(frame);
+  }
+
+  function stopFlight(f) {
+    if (!f) return;
+    f.stopped = true;
+    if (f.raf) cancelAnimationFrame(f.raf);
+    f.raf = null;
+    if (f.timer) clearTimeout(f.timer);
+    f.timer = null;
+    f.plane.style.opacity = '0';
+    f.trail.style.opacity = '0';
+  }
+
+  function stopWelcomeFlights() {
+    stopFlight(motion.intro);
+    stopFlight(motion.ambient);
+  }
+
+  function startFlights() {
+    stopWelcomeFlights();
+    if (motion.reduced || !motion.intro || !motion.ambient) return;
+    motion.intro.stopped = false;
+    motion.ambient.stopped = false;
+    motion.intro.timer = setTimeout(function () {
+      flyPass(motion.intro, { path: FLIGHT_INTRO, duration: 3.1, scale: [3.2, 4.4] });
+    }, 350);
+    motion.ambient.timer = setTimeout(function () {
+      if (motion.ambient.stopped) return;
+      flyPass(motion.ambient, { path: FLIGHT_AMBIENT, duration: 11, scale: [1.3, 1.9], repeat: 16 });
+    }, 9000);
+  }
+
+  function buildWelcomeMotion() {
+    var host = el.screens.attract;
+    if (!host) return;
+
+    var radar = make('div', 'radar-field');
+    radar.setAttribute('aria-hidden', 'true');
+    radar.innerHTML = '<div class="radar-sweep"></div>' + radarMarkup();
+    host.appendChild(radar);
+
+    var decor = make('div', 'decor-paths');
+    decor.setAttribute('aria-hidden', 'true');
+    decor.innerHTML = decorMarkup();
+    host.appendChild(decor);
+
+    var crests = host.querySelector('.welcome-crests');
+    if (crests) {
+      var glint = make('span', 'glint-layer');
+      glint.setAttribute('aria-hidden', 'true');
+      crests.appendChild(glint);
+    }
+
+    motion.intro = buildFlight('flight-front');
+    motion.ambient = buildFlight('flight-behind');
+    host.appendChild(motion.ambient.svg);
+    host.appendChild(motion.intro.svg);
+  }
+
+  /* ---------------- standby before returning to the welcome screen ---------------- */
+  function buildStandby() {
+    var overlay = el.idleOverlay;
+    if (!overlay) return;
+    var note = overlay.querySelector('span');
+    var crest = img('assets/icons/afcsc.png', '');
+    crest.className = 'idle-crest';
+    crest.setAttribute('aria-hidden', 'true');
+    var rings = make('div', 'idle-rings');
+    rings.setAttribute('aria-hidden', 'true');
+    rings.appendChild(jetSvg('idle-jet'));
+    var rule = make('span', 'idle-rule');
+    rule.setAttribute('aria-hidden', 'true');
+    overlay.insertBefore(crest, overlay.firstChild);
+    overlay.insertBefore(rings, note || null);
+    overlay.insertBefore(rule, note || null);
+    if (note) note.classList.add('idle-note');
+  }
+
+  function buildMotion() {
+    motion.screens = $('screens');
+    buildCurtain();
+    buildTabJet();
+    buildWelcomeMotion();
+    buildStandby();
+    positionTabJet(state.screen);
   }
 
   /* ---------------- init ---------------- */
@@ -1053,6 +1470,7 @@
 
     linkS01();
     applyStaticI18n();
+    buildMotion();
     buildAttract();
     buildHome();
     buildStaff();
@@ -1067,11 +1485,11 @@
       });
     });
 
-    el.screens.attract.addEventListener('click', function () { showScreen('home'); });
+    el.screens.attract.addEventListener('click', function () { navigate('home'); });
     $('btn-close').addEventListener('click', function () { window.close(); });
     el.btnSound.addEventListener('click', toggleAmbient);
     document.querySelectorAll('[data-nav]').forEach(function (b) {
-      b.addEventListener('click', function () { showScreen(b.getAttribute('data-nav')); });
+      b.addEventListener('click', function () { navigate(b.getAttribute('data-nav')); });
     });
 
     el.ciPrev.addEventListener('click', function () { showChief(state.course, state.ci[state.course] - 1, -1); });
@@ -1110,6 +1528,7 @@
     window.addEventListener('resize', scaleStage);
     scaleStage();
     startHonours();
+    startFlights();
     startAmbient();
   }
 

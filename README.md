@@ -74,6 +74,45 @@ be added as a column and the roll split into Senior and Junior Course.
 
 After 100 seconds without a touch the kiosk returns to the welcome screen.
 
+## Motion
+
+The kiosk borrows the motion language of the AFCSC history exhibition: a jet-towed
+**flight curtain** between screens, a **radar field** and **aircraft flypasts** over the
+welcome screen, drawn dotted flight paths, Ken Burns portraits, crest glints, staggered
+reveals and pressable feedback. It is all plain CSS and JavaScript — no libraries, no build
+step, still offline — and it is decorative only: the screens, copy, rolls and assets are
+unchanged. The layers (curtain, radar, paths, aircraft, jets, standby) are created by
+`script.js` when the app starts, so `index.html` stays exactly as it was.
+
+- **Flight curtain.** Every screen change — the top bar, the home folders, a course panel,
+  a deep link from a file, the idle return — is covered by a brass panel and a navy panel
+  towed by a jet, with the section number and title. The incoming screen's entrance is held
+  until the curtain lifts. Timings are `MOTION_COVER_MS` and `MOTION_REVEAL_MS` at the top of
+  the motion block in `script.js`.
+- **Welcome.** A radar sweep with range rings and compass ticks behind the crest, an intro
+  flypast across the composition (behind the content, its contrail fading as the pass ends),
+  distant flypasts every sixteen seconds, three drawn flight paths, a glint across the crests,
+  a clip-path reveal on the title and staggered text, and two brass pulse rings on *Touch to
+  begin*. The flypasts use a local SVG jet, so the kiosk needs no image files it does not
+  already have.
+- **Directing Staff.** Cards reveal as they scroll into view, their portraits drift slowly,
+  and the year ribbon's bars grow from the baseline.
+- **Chief Instructors and S01 A7.** The chain links clip in one after another, the active
+  appointment lifts, and a small jet glides to it; the portrait sits in a print frame with
+  brass corners and a slow Ken Burns drift.
+- **Personnel file.** The drawer slides in with a light sweep across the paper, and the
+  portrait drifts inside its frame.
+- **Top bar.** The gold underline grows under the active tab and a small jet taxis along it,
+  turning to face the way it travels.
+- **Idle.** The overlay is a short standby scene — crest, range rings, brass rule, jet — and
+  then the flight curtain returns the kiosk to the welcome screen.
+- **Reduced motion.** With `prefers-reduced-motion: reduce`, the radar, flypasts, glints,
+  Ken Burns and curtain are switched off and navigation happens instantly, exactly as before.
+
+If the browser does not support the Web Animations API the curtain is skipped and screens
+change directly; nothing else in the app depends on it.
+
+
 ## Running on the kiosk
 
 1. Copy the folder onto the kiosk PC.
@@ -180,8 +219,8 @@ internet access.
 
 ```
 index.html            markup for every screen
-styles.css            theme and layout
-script.js             navigation, honours board, staff views, files, line of succession, idle reset
+styles.css            theme, layout and the exhibit motion (curtain, radar, flypasts, reveals)
+script.js             navigation, honours board, staff views, files, line of succession, idle reset, motion
 data/content.js       on-screen text, ranks and their insignia, air forces, branches
 data/roll.js          the Directing Staff and Chief Instructors (built from source/)
 data/s01.js           the S01 A7 chronicle (typed from source/)
